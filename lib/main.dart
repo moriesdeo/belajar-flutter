@@ -1,4 +1,3 @@
-import 'package:belajar_flutter/domain/entities.dart';
 import 'package:belajar_flutter/domain/use_case.dart';
 import 'package:belajar_flutter/second.dart';
 import 'package:flutter/material.dart';
