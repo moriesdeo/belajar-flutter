@@ -1,12 +1,21 @@
 import 'package:belajar_flutter/data/repositories.dart';
-import 'package:belajar_flutter/domain/entities.dart';
 
-class FetchGetAllStoryUseCase {
-  late final MainRepository mainRepository;
+class FetchDataUseCase {
+  final DataRepository repository;
 
-  FetchGetAllStoryUseCase(this.mainRepository);
+  FetchDataUseCase(this.repository);
 
-  Future<GetAllStories> call(int page, int size, int location) async {
-    return await mainRepository.execute(page, size);
+  Future<String> execute() async {
+    return await repository.fetchData();
+  }
+}
+
+class PostDataUseCase {
+  final DataRepository repository;
+
+  PostDataUseCase(this.repository);
+
+  Future<bool> execute(Map<String, dynamic> data) async {
+    return await repository.postData(data);
   }
 }

@@ -1,15 +1,52 @@
-import 'package:belajar_flutter/domain/use_case.dart';
+import 'package:belajar_flutter/data/data_sources.dart';
+import 'package:belajar_flutter/domain/viewmodel.dart';
 import 'package:belajar_flutter/second.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  setupLocator();
+  runApp(
+    Provider<MyViewModel>(
+      create: (_) => locator<MyViewModel>(),
+      child: const MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late MyViewModel viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel = locator<MyViewModel>();
+    fetchData();
+  }
+
+  void fetchData() async {
+    String data = await viewModel.fetchData();
+    print("Fetched data: $data");
+  }
+
+  void postData(Map<String, dynamic> data) async {
+    bool success = await viewModel.postData(data);
+    print("Post was successful: $success");
+  }
+
+  @override
+  void dispose() {
+    // Dispose viewModel if needed, or handle any cleanup
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,19 +55,15 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(
-        title: 'Home Page',
-        fetchGetAllStoryUseCase: null,
-      ),
+      home: const MyHomePage(title: 'Home Page'),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage(
-      {super.key, required this.title, required this.fetchGetAllStoryUseCase});
-  final FetchGetAllStoryUseCase? fetchGetAllStoryUseCase;
+  const MyHomePage({super.key, required this.title});
+  // final FetchGetAllStoryUseCase? fetchGetAllStoryUseCase;
 
   final String title;
 
@@ -50,7 +83,7 @@ void navigateToScreen(BuildContext context, Widget screen) {
 class _MyHomePageState extends State<MyHomePage> {
   void _onFloatingButtonPressed() {
     setState(() {
-      navigateToScreen(context, MySecondApp());
+      navigateToScreen(context, const MyThirdApp());
     });
   }
 

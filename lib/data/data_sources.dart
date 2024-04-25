@@ -1,35 +1,69 @@
+import 'package:belajar_flutter/data/repositories.dart';
+import 'package:belajar_flutter/domain/use_case.dart';
+import 'package:belajar_flutter/domain/viewmodel.dart';
+import 'package:belajar_flutter/helper/helper.dart';
+import 'package:http/http.dart' as http;
+import 'package:get_it/get_it.dart';
 import 'dart:convert';
 
-import 'package:belajar_flutter/infrastructure/api.dart';
+GetIt locator = GetIt.instance;
 
-class AllStoryDataNetworkSource {
-  final NetworkClient client;
+void setupLocator() {
+  locator.registerLazySingleton(
+      () => http.Client()); // Ensuring the HTTP client is available
+  locator.registerLazySingleton(
+      () => TokenManager()); // Token Manager to manage authentication tokens
+  locator.registerLazySingleton(() => APIClient(
+      'https://story-api.dicoding.dev/v1',
+      client: locator<http.Client>(),
+      tokenManager: locator<TokenManager>()));
+  locator.registerLazySingleton<DataRepository>(
+      () => DataRepositoryImpl(locator<APIClient>()));
+  locator.registerFactory(() => FetchDataUseCase(locator<DataRepository>()));
+  locator.registerFactory(() => PostDataUseCase(locator<DataRepository>()));
+  locator.registerFactory(() =>
+      MyViewModel(locator<FetchDataUseCase>(), locator<PostDataUseCase>()));
+}
 
-  AllStoryDataNetworkSource(this.client);
+class APIClient {
+  final String _baseUrl;
+  http.Client client;
+  TokenManager tokenManager;
 
-  Future<dynamic> fetchGetAllStory(int page, int size) async {
-    String url = 'https://story-api.dicoding.dev/v1';
-    String path = '/endpoint-to-get-all-stories'; // Update endpoint path
-    String token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLXhmVF9rUlVfelhhSHdxczEiLCJpYXQiOjE3MTM4MDgyMjR9.j3G1SxnA4Rs6n6bwxhjZTohYssrTU0uXLJFWzEFKV7g';
+  APIClient._internal(this._baseUrl, this.client, this.tokenManager);
 
-    try {
-      // Sending request to get all stories
-      var response = await client.makeRequest(url, path, token,
-          data: {'size': size, 'page': page}, bodyType: BodyType.urlencoded);
+  factory APIClient(String baseUrl,
+      {required http.Client client, required TokenManager tokenManager}) {
+    return APIClient._internal(baseUrl, client, tokenManager);
+  }
 
-      // Checking response status code
-      if (response.statusCode == 200) {
-        // If successful, parse response body
-        return jsonDecode(response.body);
-      } else {
-        // If request fails, throw an exception
-        throw Exception('Request failed with status: ${response.statusCode}.');
-      }
-    } catch (e) {
-      // Handle any errors that occur during the request
-      print('Error fetching all stories: $e');
-      throw e;
+  Future<http.Response> getRequest(String endpoint) async {
+    String token = tokenManager.token;
+    return _makeRequest('GET', endpoint, token);
+  }
+
+  Future<http.Response> postRequest(
+      String endpoint, Map<String, dynamic> data) async {
+    String token = tokenManager.token;
+    return _makeRequest('POST', endpoint, token, data: data);
+  }
+
+  Future<http.Response> _makeRequest(
+      String method, String endpoint, String token,
+      {Map<String, dynamic>? data}) async {
+    Uri url = Uri.parse('$_baseUrl$endpoint');
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    switch (method) {
+      case 'POST':
+        return await http.post(url, headers: headers, body: json.encode(data));
+      case 'GET':
+        return await http.get(url, headers: headers);
+      default:
+        throw UnimplementedError('HTTP method $method not supported');
     }
   }
 }
