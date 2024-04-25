@@ -17,12 +17,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  MyViewModel viewModel = locator<MyViewModel>();
+  MyViewModel viewModel = getit<MyViewModel>();
 
   @override
   void initState() {
     super.initState();
-    viewModel = locator<MyViewModel>();
+    viewModel = getit<MyViewModel>();
     postData({'email': 'abcde@abcd.com', 'password': '11223344'});
     // fetchData();
   }

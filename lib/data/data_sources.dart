@@ -6,23 +6,23 @@ import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
 import 'dart:convert';
 
-GetIt locator = GetIt.instance;
+GetIt getit = GetIt.instance;
 
 void setupLocator() {
-  locator.registerLazySingleton(
+  getit.registerLazySingleton(
       () => http.Client()); // Ensuring the HTTP client is available
-  locator.registerLazySingleton(
+  getit.registerLazySingleton(
       () => TokenManager()); // Token Manager to manage authentication tokens
-  locator.registerLazySingleton(() => APIClient(
+  getit.registerLazySingleton(() => APIClient(
       'https://story-api.dicoding.dev/v1',
-      client: locator<http.Client>(),
-      tokenManager: locator<TokenManager>()));
-  locator.registerLazySingleton<DataRepository>(
-      () => DataRepositoryImpl(locator<APIClient>()));
-  locator.registerFactory(() => FetchDataUseCase(locator<DataRepository>()));
-  locator.registerFactory(() => PostDataUseCase(locator<DataRepository>()));
-  locator.registerFactory(() =>
-      MyViewModel(locator<FetchDataUseCase>(), locator<PostDataUseCase>()));
+      client: getit<http.Client>(),
+      tokenManager: getit<TokenManager>()));
+  getit.registerLazySingleton<DataRepository>(
+      () => DataRepositoryImpl(getit<APIClient>()));
+  getit.registerFactory(() => FetchDataUseCase(getit<DataRepository>()));
+  getit.registerFactory(() => PostDataUseCase(getit<DataRepository>()));
+  getit.registerFactory(
+      () => MyViewModel(getit<FetchDataUseCase>(), getit<PostDataUseCase>()));
 }
 
 class APIClient {
