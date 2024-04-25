@@ -1,5 +1,5 @@
 class TokenManager {
-  late String _token;
+  late String _token = '';
 
   String get token => _token;
 

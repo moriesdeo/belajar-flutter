@@ -1,17 +1,13 @@
 import 'package:belajar_flutter/data/data_sources.dart';
+import 'package:belajar_flutter/domain/entities.dart';
 import 'package:belajar_flutter/domain/viewmodel.dart';
 import 'package:belajar_flutter/second.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   setupLocator();
-  runApp(
-    Provider<MyViewModel>(
-      create: (_) => locator<MyViewModel>(),
-      child: const MyApp(),
-    ),
-  );
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -22,13 +18,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late MyViewModel viewModel;
+  MyViewModel viewModel = locator<MyViewModel>();
 
   @override
   void initState() {
     super.initState();
     viewModel = locator<MyViewModel>();
-    fetchData();
+    postData({'email': 'abcde@abcd.com', 'password': '11223344'});
+    // fetchData();
   }
 
   void fetchData() async {
@@ -37,8 +34,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   void postData(Map<String, dynamic> data) async {
-    bool success = await viewModel.postData(data);
-    print("Post was successful: $success");
+    LoginResponse success = await viewModel.postData(data);
+    print("Post was successful: ${success.loginResult.name}");
   }
 
   @override

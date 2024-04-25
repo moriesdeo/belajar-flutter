@@ -1,4 +1,5 @@
 import 'package:belajar_flutter/data/repositories.dart';
+import 'package:belajar_flutter/domain/entities.dart';
 
 class FetchDataUseCase {
   final DataRepository repository;
@@ -15,7 +16,7 @@ class PostDataUseCase {
 
   PostDataUseCase(this.repository);
 
-  Future<bool> execute(Map<String, dynamic> data) async {
+  Future<LoginResponse> execute(Map<String, dynamic> data) async {
     return await repository.postData(data);
   }
 }

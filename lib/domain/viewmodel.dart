@@ -1,3 +1,4 @@
+import 'package:belajar_flutter/domain/entities.dart';
 import 'package:belajar_flutter/domain/use_case.dart';
 
 class MyViewModel {
@@ -10,7 +11,7 @@ class MyViewModel {
     return await fetchDataUseCase.execute();
   }
 
-  Future<bool> postData(Map<String, dynamic> data) async {
+  Future<LoginResponse> postData(Map<String, dynamic> data) async {
     return await postDataUseCase.execute(data);
   }
 }

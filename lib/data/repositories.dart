@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:belajar_flutter/data/data_sources.dart';
+import 'package:belajar_flutter/domain/entities.dart';
 
 abstract class DataRepository {
   Future<String> fetchData();
-  Future<bool> postData(Map<String, dynamic> data);
+  Future<LoginResponse> postData(Map<String, dynamic> data);
 }
 
 class DataRepositoryImpl implements DataRepository {
@@ -17,8 +20,18 @@ class DataRepositoryImpl implements DataRepository {
   }
 
   @override
-  Future<bool> postData(Map<String, dynamic> data) async {
-    var response = await apiClient.postRequest('/submit', data);
-    return response.statusCode == 200;
+  Future<LoginResponse> postData(Map<String, dynamic> data) async {
+    var response = await apiClient.postRequest('/login', data);
+    if (response.statusCode == 200) {
+      // Parse the JSON response into the LoginResponse object
+      LoginResponse loginResponse =
+          LoginResponse.fromJson(json.decode(response.body));
+      // Update the token in the TokenManager
+      apiClient.tokenManager.token = loginResponse.loginResult.token;
+      return loginResponse;
+    } else {
+      // Handle non-200 status codes
+      throw Exception('Failed to login, status code: ${response.statusCode}');
+    }
   }
 }
