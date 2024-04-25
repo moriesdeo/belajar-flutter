@@ -34,36 +34,6 @@ class APIClient {
     return APIClient._internal(baseUrl, client, tokenManager);
   }
 
-  Future<http.Response> getRequest(String endpoint) async {
-    String token = tokenManager.token;
-    return _makeRequest('GET', endpoint, token);
-  }
-
-  Future<http.Response> postRequest(
-      String endpoint, Map<String, dynamic> data) async {
-    String token = tokenManager.token;
-    return _makeRequest('POST', endpoint, token, data: data);
-  }
-
-  Future<http.Response> _makeRequest(
-      String method, String endpoint, String token,
-      {Map<String, dynamic>? data}) async {
-    Uri url = Uri.parse('$_baseUrl$endpoint');
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
-
-    switch (method) {
-      case 'POST':
-        return await http.post(url, headers: headers, body: json.encode(data));
-      case 'GET':
-        return await http.get(url, headers: headers);
-      default:
-        throw UnimplementedError('HTTP method $method not supported');
-    }
-  }
-
   Future<http.Response> login(String email, String password) {
     return http.post(
       Uri.parse('$_baseUrl/login'),

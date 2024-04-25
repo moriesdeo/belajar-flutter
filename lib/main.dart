@@ -23,19 +23,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     viewModel = getit<MyViewModel>();
-    // postData({'email': 'abcde@abcd.com', 'password': '11223344'});
-    // fetchData();
     login('abcde@abcd.com', '11223344');
-  }
-
-  void fetchData() async {
-    String data = await viewModel.fetchData();
-    print("Fetched data: $data");
-  }
-
-  void postData(Map<String, dynamic> data) async {
-    LoginResponse success = await viewModel.postData(data);
-    print("Post was successful: ${success.loginResult.name}");
   }
 
   void login(String email, String password) async {
