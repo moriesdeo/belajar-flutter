@@ -4,7 +4,6 @@ import 'package:belajar_flutter/domain/viewmodel.dart';
 import 'package:belajar_flutter/helper/helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
-import 'dart:convert';
 
 GetIt getit = GetIt.instance;
 void setupLocator() {
