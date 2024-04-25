@@ -2,12 +2,12 @@ import 'package:belajar_flutter/domain/entities.dart';
 import 'package:belajar_flutter/domain/use_case.dart';
 
 class MyViewModel {
-  final FetchDataUseCase fetchDataUseCase;
-  final PostDataUseCase postDataUseCase;
+  final LoginUseCase loginUseCase;
+  final RegisterUseCase registerUseCase;
 
-  MyViewModel(this.fetchDataUseCase, this.postDataUseCase);
+  MyViewModel(this.loginUseCase, this.registerUseCase);
 
   Future<LoginResponse> login(String email, String password) async {
-    return await postDataUseCase.login(email, password);
+    return await loginUseCase.login(email, password);
   }
 }

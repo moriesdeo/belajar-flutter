@@ -1,22 +1,23 @@
 import 'package:belajar_flutter/data/repositories.dart';
 import 'package:belajar_flutter/domain/entities.dart';
 
-class FetchDataUseCase {
+class LoginUseCase {
   final DataRepository repository;
 
-  FetchDataUseCase(this.repository);
+  LoginUseCase(this.repository);
 
   Future<LoginResponse> login(String email, String password) async {
     return await repository.login(email, password);
   }
 }
 
-class PostDataUseCase {
+class RegisterUseCase {
   final DataRepository repository;
 
-  PostDataUseCase(this.repository);
+  RegisterUseCase(this.repository);
 
-  Future<LoginResponse> login(String email, String password) async {
-    return await repository.login(email, password);
+  Future<RegisterResponse> register(
+      String email, String password, String name) async {
+    return await repository.register(email, password, name);
   }
 }
