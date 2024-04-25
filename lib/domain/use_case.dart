@@ -9,6 +9,10 @@ class FetchDataUseCase {
   Future<String> execute() async {
     return await repository.fetchData();
   }
+
+  Future<LoginResponse> login(String email, String password) async {
+    return await repository.login(email, password);
+  }
 }
 
 class PostDataUseCase {
@@ -18,5 +22,9 @@ class PostDataUseCase {
 
   Future<LoginResponse> execute(Map<String, dynamic> data) async {
     return await repository.postData(data);
+  }
+
+  Future<LoginResponse> login(String email, String password) async {
+    return await repository.login(email, password);
   }
 }

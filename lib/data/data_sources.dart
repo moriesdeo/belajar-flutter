@@ -7,12 +7,9 @@ import 'package:get_it/get_it.dart';
 import 'dart:convert';
 
 GetIt getit = GetIt.instance;
-
 void setupLocator() {
-  getit.registerLazySingleton(
-      () => http.Client()); // Ensuring the HTTP client is available
-  getit.registerLazySingleton(
-      () => TokenManager()); // Token Manager to manage authentication tokens
+  getit.registerLazySingleton(() => http.Client());
+  getit.registerLazySingleton(() => TokenManager());
   getit.registerLazySingleton(() => APIClient(
       'https://story-api.dicoding.dev/v1',
       client: getit<http.Client>(),
@@ -65,5 +62,18 @@ class APIClient {
       default:
         throw UnimplementedError('HTTP method $method not supported');
     }
+  }
+
+  Future<http.Response> login(String email, String password) {
+    return http.post(
+      Uri.parse('$_baseUrl/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: <String, String>{
+        'email': email,
+        'password': password,
+      },
+    );
   }
 }
