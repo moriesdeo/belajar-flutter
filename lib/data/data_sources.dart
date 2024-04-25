@@ -76,4 +76,28 @@ class APIClient {
       },
     );
   }
+
+  Future<http.Response> getStories(String token, int page, int size) {
+    return http.get(
+      Uri.parse('$_baseUrl/stories?page=$page&size=$size'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': token,
+      },
+    );
+  }
+
+  Future<http.Response> register(String name, String email, String password) {
+    return http.post(
+      Uri.parse('$_baseUrl/register'),
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: <String, String>{
+        'name': name,
+        'email': email,
+        'password': password,
+      },
+    );
+  }
 }
