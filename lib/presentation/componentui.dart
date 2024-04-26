@@ -43,3 +43,68 @@ class DynamicInputWidget extends StatelessWidget {
     );
   }
 }
+
+class ValidationModel {
+  String? value;
+  String? errorMessage;
+
+  ValidationModel(this.value, this.errorMessage);
+}
+
+class CustomInputEmail extends StatefulWidget {
+  const CustomInputEmail({
+    Key? key,
+    required this.hintText,
+    required this.onSaved,
+    required this.validationModel,
+    required this.prefIcon,
+  }) : super(key: key);
+
+  final String hintText;
+  final void Function(String? value) onSaved;
+  final ValidationModel validationModel;
+  final Icon prefIcon;
+
+  @override
+  _CustomInputEmailState createState() => _CustomInputEmailState();
+}
+
+class _CustomInputEmailState extends State<CustomInputEmail> {
+  final _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.text = widget.validationModel.value ?? '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: _controller,
+      decoration: InputDecoration(
+        hintText: widget.hintText,
+        errorText: widget.validationModel.errorMessage,
+        prefixIcon: widget.prefIcon,
+      ),
+      keyboardType: TextInputType.emailAddress,
+      onSaved: widget.onSaved,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter an email address';
+        }
+        if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+            .hasMatch(value)) {
+          return 'Please enter a valid email address';
+        }
+        return null;
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+}

@@ -9,8 +9,8 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _emailValidationModel = ValidationModel(null, null);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
               DynamicInputWidget(
                 controller: _nameController,
                 labelText: 'Name',
-                prefIcon: Icon(Icons.person),
+                prefIcon: const Icon(Icons.person),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your name';
@@ -36,22 +36,18 @@ class _RegisterPageState extends State<RegisterPage> {
                 },
                 focusNode: FocusNode(),
               ),
-              DynamicInputWidget(
-                controller: _emailController,
-                labelText: 'Email',
-                prefIcon: Icon(Icons.email),
-                validator: (value) {
-                  if (value == null || value.isEmpty || !value.contains('@')) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
+              CustomInputEmail(
+                hintText: 'Email',
+                onSaved: (value) {
+                  _emailValidationModel.value = value;
                 },
-                focusNode: FocusNode(),
+                validationModel: _emailValidationModel,
+                prefIcon: const Icon(Icons.email),
               ),
               DynamicInputWidget(
                 controller: _passwordController,
                 labelText: 'Password',
-                prefIcon: Icon(Icons.lock),
+                prefIcon: const Icon(Icons.lock),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.length < 8) {
@@ -61,7 +57,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 },
                 focusNode: FocusNode(),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
@@ -69,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     print('Register button pressed');
                   }
                 },
-                child: Text('Submit'),
+                child: const Text('Submit'),
               ),
             ],
           ),
