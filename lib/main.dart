@@ -1,6 +1,7 @@
 import 'package:belajar_flutter/data/data_sources.dart';
 import 'package:belajar_flutter/domain/entities.dart';
 import 'package:belajar_flutter/domain/viewmodel.dart';
+import 'package:belajar_flutter/presentation/componentui.dart';
 import 'package:belajar_flutter/presentation/screens.dart';
 import 'package:flutter/material.dart';
 
@@ -41,8 +42,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  String _email = '';
-  String _password = '';
+  final _passwordController = TextEditingController();
+  final _emailValidationModel = ValidationModel(null, null);
 
   MyViewModel viewModel = getit<MyViewModel>();
 
@@ -54,20 +55,21 @@ class _LoginPageState extends State<LoginPage> {
 
   void login(String email, String password) async {
     LoginResponse success = await viewModel.login(email, password);
-    print("Post was successful: ${success.loginResult.name}");
+    if (success.error == false) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => RegisterPage()));
+    }
   }
 
   @override
   void dispose() {
-    // Dispose viewModel if needed, or handle any cleanup
     super.dispose();
   }
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // Logika untuk Login
-      print('Email: $_email, Password: $_password');
+      login(_emailValidationModel.value!, _passwordController.text);
     }
   }
 
@@ -80,26 +82,26 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Email'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your email';
-                }
-                return null;
+            CustomInputEmail(
+              hintText: 'Email',
+              onSaved: (value) {
+                _emailValidationModel.value = value;
               },
-              onSaved: (value) => _email = value!,
+              validationModel: _emailValidationModel,
+              prefIcon: const Icon(Icons.email),
             ),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Password'),
+            DynamicInputWidget(
+              controller: _passwordController,
+              labelText: 'Password',
+              prefIcon: const Icon(Icons.lock),
               obscureText: true,
               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your password';
+                if (value == null || value.length < 8) {
+                  return 'Please enter a password with at least 8 characters';
                 }
                 return null;
               },
-              onSaved: (value) => _password = value!,
+              focusNode: FocusNode(),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
