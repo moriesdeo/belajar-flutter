@@ -1,63 +1,26 @@
 import 'package:belajar_flutter/data/data_sources.dart';
 import 'package:belajar_flutter/domain/entities.dart';
 import 'package:belajar_flutter/domain/viewmodel.dart';
+import 'package:belajar_flutter/presentation/screens.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   setupLocator();
 
-  runApp(const MyApp());
+  runApp(const FirstApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  MyViewModel viewModel = getit<MyViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel = getit<MyViewModel>();
-    login('abcde@abcd.com', '11223344');
-  }
-
-  void login(String email, String password) async {
-    LoginResponse success = await viewModel.login(email, password);
-    print("Post was successful: ${success.loginResult.name}");
-  }
-
-  @override
-  void dispose() {
-    // Dispose viewModel if needed, or handle any cleanup
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MySecondApp(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-class MySecondApp extends StatelessWidget {
-  const MySecondApp({super.key});
+class FirstApp extends StatelessWidget {
+  const FirstApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Login UI',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Login Page'),
@@ -80,6 +43,25 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   String _email = '';
   String _password = '';
+
+  MyViewModel viewModel = getit<MyViewModel>();
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel = getit<MyViewModel>();
+  }
+
+  void login(String email, String password) async {
+    LoginResponse success = await viewModel.login(email, password);
+    print("Post was successful: ${success.loginResult.name}");
+  }
+
+  @override
+  void dispose() {
+    // Dispose viewModel if needed, or handle any cleanup
+    super.dispose();
+  }
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
@@ -127,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
             TextButton(
               onPressed: () {
                 // Navigasi ke halaman Register
-                print('Navigating to register page...');
+                navigateToScreen(context, RegisterPage());
               },
               child: const Text('Register'),
             ),
@@ -141,58 +123,6 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class MyThirdApp extends StatelessWidget {
-  const MyThirdApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Screen Ke 3',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Halaman 3'),
-          leading: BackButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ),
-        body: CustomBackButtonHandler(
-          canPop: true, // Set this based on your app's logic
-          onPopInvoked: (didPop) async {
-            // Implement your custom back press logic here
-            // For example, show a confirmation dialog
-            if (didPop) {
-              bool shouldExit = await showDialog<bool>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Confirm'),
-                      content: const Text('Do you really want to exit?'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text('No'),
-                        ),
-                        TextButton(
-                          onPressed: () => {Navigator.of(context).pop(true)},
-                          child: const Text('Yes'),
-                        ),
-                      ],
-                    ),
-                  ) ??
-                  false; // Handle null (dialog dismissed)
-              return shouldExit;
-            }
-            return false;
-          },
-          child: const Center(child: Text('Content of Halaman 3')),
-        ),
-      ),
-      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -218,15 +148,6 @@ class CustomBackButtonHandler extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
 void navigateToScreen(BuildContext context, Widget screen) {
   Navigator.push(
     context,
@@ -234,55 +155,4 @@ void navigateToScreen(BuildContext context, Widget screen) {
       builder: (context) => screen,
     ),
   );
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  void _onFloatingButtonPressed() {
-    setState(() {
-      navigateToScreen(context, const MyThirdApp());
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: const Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _onFloatingButtonPressed,
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   _loadGetAllStory();
-  // }
-
-  // Future<void> _loadGetAllStory() async {
-  //   try {
-  //     GetAllStories? fetchedAllStory =
-  //         await widget.fetchGetAllStoryUseCase?.call(1, 10, 1);
-  //     setState(() {
-  //       print("xwxw ${fetchedAllStory?.message}");
-  //     });
-  //   } catch (e) {
-  //     setState(() {});
-  //   }
-  // }
 }

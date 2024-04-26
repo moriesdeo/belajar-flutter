@@ -10,4 +10,9 @@ class MyViewModel {
   Future<LoginResponse> login(String email, String password) async {
     return await loginUseCase.login(email, password);
   }
+
+  Future<RegisterResponse> register(
+      String name, String email, String password) async {
+    return await registerUseCase.register(name, email, password);
+  }
 }
