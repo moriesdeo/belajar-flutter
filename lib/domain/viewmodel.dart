@@ -1,4 +1,5 @@
 import 'package:belajar_flutter/domain/entities.dart';
+import 'package:belajar_flutter/domain/model.dart';
 import 'package:belajar_flutter/domain/use_case.dart';
 
 class MyViewModel {
@@ -7,7 +8,7 @@ class MyViewModel {
 
   MyViewModel(this.loginUseCase, this.registerUseCase);
 
-  Future<LoginResponse> login(String email, String password) async {
+  Future<MyResponse<LoginResponse>> login(String email, String password) async {
     return await loginUseCase.login(email, password);
   }
 

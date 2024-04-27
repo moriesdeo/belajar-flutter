@@ -1,6 +1,10 @@
+import 'dart:ffi';
+
 import 'package:belajar_flutter/data/data_sources.dart';
 import 'package:belajar_flutter/domain/entities.dart';
+import 'package:belajar_flutter/domain/model.dart';
 import 'package:belajar_flutter/domain/viewmodel.dart';
+import 'package:belajar_flutter/helper/util.dart';
 import 'package:belajar_flutter/presentation/componentui.dart';
 import 'package:belajar_flutter/presentation/screens.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +48,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
   final _emailValidationModel = ValidationModel(null, null);
+  bool _isLoading = false;
 
   MyViewModel viewModel = getit<MyViewModel>();
 
@@ -51,14 +56,32 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     viewModel = getit<MyViewModel>();
+    _isLoading = false;
   }
 
   void login(String email, String password) async {
-    LoginResponse success = await viewModel.login(email, password);
-    if (success.error == false) {
+    MyResponse<LoginResponse> success = await viewModel.login(email, password);
+    if (success.data!.error == false) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => RegisterPage()));
+      _isLoading = false;
+    } else {
+      _showAlertDialog(
+          statusCode: success.statusCode, statusMessage: success.statusMessage);
+      _isLoading = false;
     }
+  }
+
+  void _showAlertDialog(
+      {required int statusCode, required String statusMessage}) {
+    AlertDialogPositoveUtil.showPositiveAlertDialog(
+      context: context,
+      title: statusCode.toString(),
+      content: statusMessage,
+      onPositiveBtnTap: () {
+        Navigator.of(context).pop();
+      },
+    );
   }
 
   @override
@@ -70,6 +93,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       login(_emailValidationModel.value!, _passwordController.text);
+      _isLoading = true;
     }
   }
 
@@ -104,6 +128,7 @@ class _LoginPageState extends State<LoginPage> {
               focusNode: FocusNode(),
             ),
             const SizedBox(height: 20),
+            LoadingProgress(isLoading: _isLoading),
             ElevatedButton(
               onPressed: _submit,
               child: const Text('Login'),

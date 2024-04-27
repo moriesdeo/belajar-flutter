@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:belajar_flutter/data/data_sources.dart';
 import 'package:belajar_flutter/domain/entities.dart';
+import 'package:belajar_flutter/domain/model.dart';
 
 abstract class DataRepository {
-  Future<LoginResponse> login(String email, String password);
+  Future<MyResponse<LoginResponse>> login(String email, String password);
   Future<RegisterResponse> register(String name, String email, String password);
 }
 
@@ -14,7 +15,7 @@ class DataRepositoryImpl implements DataRepository {
   DataRepositoryImpl(this.apiClient);
 
   @override
-  Future<LoginResponse> login(String email, String password) async {
+  Future<MyResponse<LoginResponse>> login(String email, String password) async {
     var response = await apiClient.login(email, password);
     if (response.statusCode == 200) {
       // Convert the response data to a string before decoding it
@@ -24,7 +25,17 @@ class DataRepositoryImpl implements DataRepository {
           LoginResponse.fromJson(json.decode(jsonString));
       // Update the token in the TokenManager
       apiClient.tokenManager.saveToken(loginResponse.loginResult.token);
-      return loginResponse;
+      MyResponse<LoginResponse> myResponse = MyResponse(
+          statusCode: response.statusCode ?? 0,
+          statusMessage: response.statusMessage ?? '',
+          data: loginResponse);
+      return myResponse;
+    } else if (response.statusCode == 401) {
+      MyResponse<LoginResponse> myResponse = MyResponse(
+          statusCode: response.statusCode ?? 0,
+          statusMessage: response.statusMessage ?? '',
+          data: null);
+      return myResponse;
     } else {
       // Handle non-200 status codes
       throw Exception('Failed to login, status code: ${response.statusCode}');

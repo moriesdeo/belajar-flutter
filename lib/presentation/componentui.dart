@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class DynamicInputWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -106,5 +107,24 @@ class _CustomInputEmailState extends State<CustomInputEmail> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+}
+
+class LoadingProgress extends StatelessWidget {
+  final bool isLoading;
+
+  const LoadingProgress({super.key, required this.isLoading});
+
+  @override
+  Widget build(BuildContext context) {
+    return isLoading
+        ? Container(
+            color: Colors.black.withOpacity(0.3),
+            child: const SpinKitFadingCircle(
+              color: Colors.white,
+              size: 50.0,
+            ),
+          )
+        : Container();
   }
 }
