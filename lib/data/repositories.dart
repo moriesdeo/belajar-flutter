@@ -18,33 +18,36 @@ class DataRepositoryImpl implements DataRepository {
   Future<MyResponse<LoginResponse>> login(String email, String password) async {
     var response = await apiClient.login(email, password);
     if (response.statusCode == 200) {
-      // Convert the response data to a string before decoding it
       String jsonString = json.encode(response.data);
-      // Parse the JSON string into the LoginResponse object
       LoginResponse loginResponse =
           LoginResponse.fromJson(json.decode(jsonString));
-      // Update the token in the TokenManager
       apiClient.tokenManager.saveToken(loginResponse.loginResult.token);
-      MyResponse<LoginResponse> myResponse = MyResponse(
+      return MyResponse(
           statusCode: response.statusCode ?? 0,
           statusMessage: response.statusMessage ?? '',
           data: loginResponse);
-      return myResponse;
-    } else if (response.statusCode == 401) {
-      MyResponse<LoginResponse> myResponse = MyResponse(
-          statusCode: response.statusCode ?? 0,
-          statusMessage: response.statusMessage ?? '',
-          data: null);
-      return myResponse;
     } else {
-      // Handle non-200 status codes
-      throw Exception('Failed to login, status code: ${response.statusCode}');
+      // Handle non-200 status codes by parsing the error message if available
+      String statusMessage = '';
+      try {
+        // Attempt to decode the error message from the response
+        var decoded = json.decode(response.data);
+        statusMessage = decoded['message'] ?? 'No error message provided';
+      } catch (e) {
+        // If there's an error in parsing, use the default status message
+        statusMessage =
+            response.statusMessage ?? 'Failed to process the request';
+      }
+      return MyResponse<LoginResponse>(
+          statusCode: response.statusCode ?? 0,
+          statusMessage: statusMessage,
+          data: null);
     }
   }
 
   @override
-  Future<RegisterResponse> register(
-      String email, String password, String name) async {
+  Future<RegisterResponse> register(String name, String email,
+      String password) async {
     var response = await apiClient.register(email, password, name);
     if (response.statusCode == 200) {
       String jsonString = json.encode(response);
@@ -53,7 +56,8 @@ class DataRepositoryImpl implements DataRepository {
       return registerResponse;
     } else {
       // Handle non-200 status codes
-      throw Exception('Failed to login, status code: ${response.statusCode}');
+      throw Exception(
+          'Failed to register, status code: ${response.statusCode}');
     }
   }
 }

@@ -58,15 +58,24 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void login(String email, String password) async {
-    MyResponse<LoginResponse> success = await viewModel.login(email, password);
-    if (success.data!.error == false) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => RegisterPage()));
-      _isLoading = false;
-    } else {
+    try {
+      MyResponse<LoginResponse> success =
+          await viewModel.login(email, password);
+      if (success.data!.error == false) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => RegisterPage()));
+      } else {
+        _showAlertDialog(
+            statusCode: success.statusCode,
+            statusMessage: success.statusMessage);
+      }
+    } catch (error) {
       _showAlertDialog(
-          statusCode: success.statusCode, statusMessage: success.statusMessage);
-      _isLoading = false;
+          statusCode: 500, statusMessage: "An unexpected error occurred.");
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -90,8 +99,10 @@ class _LoginPageState extends State<LoginPage> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      setState(() {
+        _isLoading = true;
+      });
       login(_emailValidationModel.value!, _passwordController.text);
-      _isLoading = true;
     }
   }
 
