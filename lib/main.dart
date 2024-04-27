@@ -62,16 +62,12 @@ class _LoginPageState extends State<LoginPage> {
       MyResponse<LoginResponse> success =
           await viewModel.login(email, password);
       if (success.data!.error == false) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => RegisterPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()));
       } else {
-        _showAlertDialog(
-            statusCode: success.statusCode,
-            statusMessage: success.statusMessage);
+        _showAlertDialog(statusCode: success.statusCode, statusMessage: success.statusMessage);
       }
     } catch (error) {
-      _showAlertDialog(
-          statusCode: 500, statusMessage: "An unexpected error occurred.");
+      _showAlertDialog(statusCode: 500, statusMessage: "An unexpected error occurred.");
     } finally {
       setState(() {
         _isLoading = false;
@@ -79,8 +75,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _showAlertDialog(
-      {required int statusCode, required String statusMessage}) {
+  void _showAlertDialog({required int statusCode, required String statusMessage}) {
     AlertDialogPositoveUtil.showPositiveAlertDialog(
       context: context,
       title: statusCode.toString(),

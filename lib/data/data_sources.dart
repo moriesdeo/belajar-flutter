@@ -2,25 +2,19 @@ import 'package:belajar_flutter/data/repositories.dart';
 import 'package:belajar_flutter/domain/use_case.dart';
 import 'package:belajar_flutter/domain/viewmodel.dart';
 import 'package:belajar_flutter/helper/helper.dart';
-import 'package:get_it/get_it.dart';
-
 import 'package:dio/dio.dart';
+import 'package:get_it/get_it.dart';
 
 GetIt getit = GetIt.instance;
 
 void setupLocator() {
   getit.registerLazySingleton(() => Dio());
   getit.registerLazySingleton(() => TokenManager());
-  getit.registerLazySingleton(() => APIClient(
-      'https://story-api.dicoding.dev/v1',
-      client: getit<Dio>(),
-      tokenManager: getit<TokenManager>()));
-  getit.registerLazySingleton<DataRepository>(
-      () => DataRepositoryImpl(getit<APIClient>()));
+  getit.registerLazySingleton(() => APIClient('https://story-api.dicoding.dev/v1', client: getit<Dio>(), tokenManager: getit<TokenManager>()));
+  getit.registerLazySingleton<DataRepository>(() => DataRepositoryImpl(getit<APIClient>()));
   getit.registerFactory(() => LoginUseCase(getit<DataRepository>()));
   getit.registerFactory(() => RegisterUseCase(getit<DataRepository>()));
-  getit.registerFactory(
-      () => MyViewModel(getit<LoginUseCase>(), getit<RegisterUseCase>()));
+  getit.registerFactory(() => MyViewModel(getit<LoginUseCase>(), getit<RegisterUseCase>()));
 }
 
 class APIClient {
