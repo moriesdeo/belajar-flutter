@@ -62,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
       MyResponse<LoginResponse> success =
           await viewModel.login(email, password);
       if (success.data!.error == false) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()));
+        print('success login');
       } else {
         _showAlertDialog(statusCode: success.statusCode, statusMessage: success.statusMessage);
       }
@@ -138,9 +138,9 @@ class _LoginPageState extends State<LoginPage> {
               child: const Text('Login'),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 // Navigasi ke halaman Register
-                navigateToScreen(context, RegisterPage());
+                navigateToScreen(context, const MyCustomPage());
               },
               child: const Text('Register'),
             ),
@@ -177,13 +177,4 @@ class CustomBackButtonHandler extends StatelessWidget {
       child: child,
     );
   }
-}
-
-void navigateToScreen(BuildContext context, Widget screen) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => screen,
-    ),
-  );
 }

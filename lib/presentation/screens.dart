@@ -2,6 +2,8 @@ import 'package:belajar_flutter/presentation/componentui.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
@@ -17,6 +19,15 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            // Custom actions before leaving the page
+            // For example, popping with data or showing a dialog
+            Navigator.pop(context, 'wkwkwkwkwkwk');
+            print('ckckckckckckckc');
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -72,5 +83,54 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
     );
+  }
+}
+
+class MyCustomPage extends StatelessWidget {
+  const MyCustomPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (bool didPop) async {
+        if (!didPop) {
+          // Perform your logic here if the pop action was not successful
+          final shouldPop = await showConfirmDialog(context);
+          if (shouldPop) {
+            Navigator.of(context).pop();
+          }
+          return;
+        }
+        // Handle the case when pop was successful
+      },
+      child: Scaffold(
+        appBar: AppBar(title: const Text("Custom Back Navigation")),
+        body: const Center(
+          child: Text("Press Back to trigger custom logic."),
+        ),
+      ),
+    );
+  }
+
+  Future<bool> showConfirmDialog(BuildContext context) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Confirm'),
+            content: const Text('Do you want to leave this page?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Yes'),
+              ),
+            ],
+          ),
+        ) ??
+        false; // Returning false if showDialog returns null
   }
 }

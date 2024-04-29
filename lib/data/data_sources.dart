@@ -11,10 +11,10 @@ void setupLocator() {
   getit.registerLazySingleton(() => Dio());
   getit.registerLazySingleton(() => TokenManager());
   getit.registerLazySingleton(() => APIClient('https://story-api.dicoding.dev/v1', client: getit<Dio>(), tokenManager: getit<TokenManager>()));
+  getit.registerFactory(() => MyViewModel(getit<LoginUseCase>(), getit<RegisterUseCase>()));
   getit.registerLazySingleton<DataRepository>(() => DataRepositoryImpl(getit<APIClient>()));
   getit.registerFactory(() => LoginUseCase(getit<DataRepository>()));
   getit.registerFactory(() => RegisterUseCase(getit<DataRepository>()));
-  getit.registerFactory(() => MyViewModel(getit<LoginUseCase>(), getit<RegisterUseCase>()));
 }
 
 class APIClient {

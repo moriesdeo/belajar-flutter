@@ -57,3 +57,14 @@ class AlertDialogPositoveUtil {
     );
   }
 }
+
+void navigateToScreen(BuildContext context, Widget screen) {
+  final result = Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => screen,
+    ),
+  );
+
+  print('Received back: $result');
+}
