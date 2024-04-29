@@ -19,8 +19,8 @@ void setupLocator() {
 
 class APIClient {
   final String _baseUrl;
-  Dio client;
-  TokenManager tokenManager;
+  final Dio client;
+  final TokenManager tokenManager;
 
   APIClient._internal(this._baseUrl, this.client, this.tokenManager);
 

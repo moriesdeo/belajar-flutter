@@ -5,7 +5,7 @@ import 'package:belajar_flutter/domain/entities.dart';
 import 'package:belajar_flutter/domain/model.dart';
 
 abstract class DataRepository {
-  Future<MyResponse<LoginResponse>> login(String email, String password);
+  Future<MyResponse<LoginResponse>>   login(String email, String password);
   Future<RegisterResponse> register(String name, String email, String password);
 }
 
