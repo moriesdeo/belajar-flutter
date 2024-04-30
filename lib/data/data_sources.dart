@@ -9,8 +9,8 @@ GetIt getit = GetIt.instance;
 
 void setupLocator() {
   getit.registerLazySingleton(() => Dio());
-  getit.registerLazySingleton(() => TokenManager());
-  getit.registerLazySingleton(() => APIClient('https://story-api.dicoding.dev/v1', client: getit<Dio>(), tokenManager: getit<TokenManager>()));
+  getit.registerLazySingleton(() => PrefManager());
+  getit.registerLazySingleton(() => APIClient('https://story-api.dicoding.dev/v1', client: getit<Dio>(), tokenManager: getit<PrefManager>()));
   getit.registerFactory(() => MyViewModel(getit<LoginUseCase>(), getit<RegisterUseCase>()));
   getit.registerLazySingleton<DataRepository>(() => DataRepositoryImpl(getit<APIClient>()));
   getit.registerFactory(() => LoginUseCase(getit<DataRepository>()));
@@ -20,12 +20,11 @@ void setupLocator() {
 class APIClient {
   final String _baseUrl;
   final Dio client;
-  final TokenManager tokenManager;
+  final PrefManager tokenManager;
 
   APIClient._internal(this._baseUrl, this.client, this.tokenManager);
 
-  factory APIClient(String baseUrl,
-      {required Dio client, required TokenManager tokenManager}) {
+  factory APIClient(String baseUrl, {required Dio client, required PrefManager tokenManager}) {
     return APIClient._internal(baseUrl, client, tokenManager);
   }
 

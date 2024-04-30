@@ -7,6 +7,8 @@ import 'package:belajar_flutter/presentation/componentui.dart';
 import 'package:belajar_flutter/presentation/screens.dart';
 import 'package:flutter/material.dart';
 
+import 'app_end.dart';
+
 void main() {
   setupLocator();
   runApp(const FirstApp());
@@ -18,14 +20,13 @@ class FirstApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Login UI',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Login Page'),
+          title: Text(Localization.getString('app_title', locale: '')),
         ),
         body: const LoginPage(),
       ),
