@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class DashboardApp extends StatelessWidget {
   const DashboardApp({super.key});
@@ -38,9 +39,6 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Bottom Navigation Bar Example'),
-      ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -75,7 +73,20 @@ class Page1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Page 1'));
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Google Maps Example'),
+        ),
+        body: const GoogleMap(
+          initialCameraPosition: CameraPosition(
+            target: LatLng(37.77483, -122.41942), // San Francisco
+            zoom: 11.0,
+          ),
+        ),
+      ),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
 
