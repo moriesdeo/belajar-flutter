@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextButton(
               onPressed: () async {
-                navigateToScreen(context, const MyCustomPage());
+                navigateToScreen(context, const RegisterPage());
               },
               child: const Text('Register'),
             ),
