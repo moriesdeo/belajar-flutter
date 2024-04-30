@@ -1,13 +1,13 @@
 import 'package:belajar_flutter/data/data_sources.dart';
-import 'package:belajar_flutter/domain/entities.dart';
-import 'package:belajar_flutter/domain/model.dart';
 import 'package:belajar_flutter/domain/viewmodel.dart';
+import 'package:belajar_flutter/helper/helper.dart';
 import 'package:belajar_flutter/helper/util.dart';
 import 'package:belajar_flutter/presentation/componentui.dart';
 import 'package:belajar_flutter/presentation/screens.dart';
+import 'package:belajar_flutter/ui/dashboard.dart';
 import 'package:flutter/material.dart';
 
-import 'app_end.dart';
+import '../app_end.dart';
 
 void main() {
   setupLocator();
@@ -15,7 +15,7 @@ void main() {
 }
 
 class FirstApp extends StatelessWidget {
-  const FirstApp({super.key});
+  const FirstApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class FirstApp extends StatelessWidget {
 }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -46,22 +46,30 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
   final _emailValidationModel = ValidationModel(null, null);
+  final prefManager = PrefManager();
   bool _isLoading = false;
-
-  MyViewModel viewModel = getit<MyViewModel>();
+  late final MyViewModel viewModel;
 
   @override
   void initState() {
     super.initState();
     viewModel = getit<MyViewModel>();
     _isLoading = false;
+    checkLoggedIn();
+  }
+
+  Future<void> checkLoggedIn() async {
+    if (await prefManager.isLoggedIn()) {
+      navigateToScreen(context, DashboardApp());
+    }
   }
 
   void login(String email, String password) async {
     try {
-      MyResponse<LoginResponse> success =
-          await viewModel.login(email, password);
+      final success = await viewModel.login(email, password);
       if (success.data!.error == false) {
+        prefManager.setLoggedIn(true);
+        navigateToScreen(context, DashboardApp());
         print('success login');
       } else {
         _showAlertDialog(statusCode: success.statusCode, statusMessage: success.statusMessage);
@@ -84,21 +92,6 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.of(context).pop();
       },
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      setState(() {
-        _isLoading = true;
-      });
-      login(_emailValidationModel.value!, _passwordController.text);
-    }
   }
 
   @override
@@ -139,14 +132,12 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextButton(
               onPressed: () async {
-                // Navigasi ke halaman Register
                 navigateToScreen(context, const MyCustomPage());
               },
               child: const Text('Register'),
             ),
             TextButton(
               onPressed: () {
-                // Logika untuk "Forgot Password"
                 print('Forgot password functionality...');
               },
               child: const Text('Forgot Password?'),
@@ -156,6 +147,22 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  void _submit() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      setState(() {
+        _isLoading = true;
+      });
+      login(_emailValidationModel.value!, _passwordController.text);
+    }
+  }
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
 }
 
 class CustomBackButtonHandler extends StatelessWidget {
@@ -163,12 +170,7 @@ class CustomBackButtonHandler extends StatelessWidget {
   final bool canPop;
   final Future<bool> Function(bool didPop) onPopInvoked;
 
-  const CustomBackButtonHandler({
-    super.key,
-    required this.child,
-    required this.canPop,
-    required this.onPopInvoked,
-  });
+  const CustomBackButtonHandler({Key? key, required this.child, required this.canPop, required this.onPopInvoked}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

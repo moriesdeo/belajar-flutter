@@ -6,7 +6,7 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:belajar_flutter/data/data_sources.dart';
-import 'package:belajar_flutter/main.dart';
+import 'package:belajar_flutter/ui/main.dart';
 import 'package:belajar_flutter/presentation/componentui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
