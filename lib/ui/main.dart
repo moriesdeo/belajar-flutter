@@ -15,7 +15,7 @@ void main() {
 }
 
 class FirstApp extends StatelessWidget {
-  const FirstApp({Key? key}) : super(key: key);
+  const FirstApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class FirstApp extends StatelessWidget {
 }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> checkLoggedIn() async {
     if (await prefManager.isLoggedIn()) {
-      navigateToScreen(context, DashboardApp());
+      navigateToScreen(context, const DashboardApp());
     }
   }
 
@@ -69,8 +69,7 @@ class _LoginPageState extends State<LoginPage> {
       final success = await viewModel.login(email, password);
       if (success.data!.error == false) {
         prefManager.setLoggedIn(true);
-        navigateToScreen(context, DashboardApp());
-        print('success login');
+        navigateToScreen(context, const DashboardApp());
       } else {
         _showAlertDialog(statusCode: success.statusCode, statusMessage: success.statusMessage);
       }
@@ -170,7 +169,7 @@ class CustomBackButtonHandler extends StatelessWidget {
   final bool canPop;
   final Future<bool> Function(bool didPop) onPopInvoked;
 
-  const CustomBackButtonHandler({Key? key, required this.child, required this.canPop, required this.onPopInvoked}) : super(key: key);
+  const CustomBackButtonHandler({super.key, required this.child, required this.canPop, required this.onPopInvoked});
 
   @override
   Widget build(BuildContext context) {
