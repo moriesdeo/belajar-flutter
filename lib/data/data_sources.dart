@@ -42,27 +42,35 @@ class APIClient {
     }
   }
 
-  Future<Response> getStories(String token, int page, int size) {
-    return client.get(
-      '$_baseUrl/stories?page=$page&size=$size',
-      options: Options(
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': token,
-        },
-      ),
-    );
+  Future<Response> getStories(String token, int page, int size) async {
+    try {
+      return client.get(
+        '$_baseUrl/stories?page=$page&size=$size',
+        options: Options(
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': token,
+          },
+        ),
+      );
+    } on DioException catch (e) {
+      return _handleError(e);
+    }
   }
 
-  Future<Response> register(String name, String email, String password) {
-    return client.post(
-      '$_baseUrl/register',
-      data: <String, String>{
-        'name': name,
-        'email': email,
-        'password': password,
-      },
-    );
+  Future<Response> register(String name, String email, String password) async {
+    try {
+      return client.post(
+        '$_baseUrl/register',
+        data: <String, String>{
+          'name': name,
+          'email': email,
+          'password': password,
+        },
+      );
+    } on DioException catch (e) {
+      return _handleError(e);
+    }
   }
 
   // Helper method to handle errors from Dio
