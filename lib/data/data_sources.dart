@@ -37,7 +37,7 @@ class APIClient {
           'password': password,
         },
       );
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return _handleError(e);
     }
   }
@@ -66,7 +66,7 @@ class APIClient {
   }
 
   // Helper method to handle errors from Dio
-  Response _handleError(DioError e) {
+  Response _handleError(DioException e) {
     if (e.response != null) {
       // Handling error based on response status code or error type
       return Response(
