@@ -5,8 +5,10 @@ import 'package:belajar_flutter/domain/entities.dart';
 import 'package:belajar_flutter/domain/model.dart';
 
 abstract class DataRepository {
-  Future<MyResponse<LoginResponse>>   login(String email, String password);
+  Future<MyResponse<LoginResponse>> login(String email, String password);
   Future<RegisterResponse> register(String name, String email, String password);
+
+  Future<ListStoriesResponse> getListStories(String token, int page, int size, int location);
 }
 
 class DataRepositoryImpl implements DataRepository {
@@ -58,6 +60,19 @@ class DataRepositoryImpl implements DataRepository {
       // Handle non-200 status codes
       throw Exception(
           'Failed to register, status code: ${response.statusCode}');
+    }
+  }
+
+  @override
+  Future<ListStoriesResponse> getListStories(String token, int page, int size, int location) async {
+    var response = await apiClient.getStories(token, page, size, location);
+    if (response.statusCode == 200) {
+      String jsonString = json.encode(response);
+      ListStoriesResponse listStoriesResponse = ListStoriesResponse.fromJson(json.decode(jsonString));
+      return listStoriesResponse;
+    } else {
+      // Handle non-200 status codes
+      throw Exception('Failed to register, status code: ${response.statusCode}');
     }
   }
 }

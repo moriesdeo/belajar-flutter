@@ -42,10 +42,10 @@ class APIClient {
     }
   }
 
-  Future<Response> getStories(String token, int page, int size) async {
+  Future<Response> getStories(String token, int page, int size, int location) async {
     try {
       return client.get(
-        '$_baseUrl/stories?page=$page&size=$size',
+        '$_baseUrl/stories?page=$page&size=$size&location$location',
         options: Options(
           headers: <String, String>{
             'Content-Type': 'application/json',
