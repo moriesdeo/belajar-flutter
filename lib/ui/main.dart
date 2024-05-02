@@ -67,14 +67,13 @@ class _LoginPageState extends State<LoginPage> {
   void login(String email, String password) async {
     try {
       final success = await viewModel.login(email, password);
-      if (success.data!.error == false) {
+      if (success.statusCode == 200 && success.data!.error == false) {
         prefManager.setLoggedIn(true);
         navigateToScreen(context, const DashboardApp());
       } else {
         _showAlertDialog(statusCode: success.statusCode, statusMessage: success.statusMessage);
       }
     } catch (error) {
-      _showAlertDialog(statusCode: 500, statusMessage: "An unexpected error occurred.");
     } finally {
       setState(() {
         _isLoading = false;

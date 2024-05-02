@@ -28,14 +28,18 @@ class APIClient {
     return APIClient._internal(baseUrl, client, tokenManager);
   }
 
-  Future<Response> login(String email, String password) {
-    return client.post(
-      '$_baseUrl/login',
-      data: <String, String>{
-        'email': email,
-        'password': password,
-      },
-    );
+  Future<Response> login(String email, String password) async {
+    try {
+      return await client.post(
+        '$_baseUrl/login',
+        data: <String, String>{
+          'email': email,
+          'password': password,
+        },
+      );
+    } on DioError catch (e) {
+      return _handleError(e);
+    }
   }
 
   Future<Response> getStories(String token, int page, int size) {
@@ -59,5 +63,24 @@ class APIClient {
         'password': password,
       },
     );
+  }
+
+  // Helper method to handle errors from Dio
+  Response _handleError(DioError e) {
+    if (e.response != null) {
+      // Handling error based on response status code or error type
+      return Response(
+        requestOptions: e.requestOptions,
+        data: {'message': 'Error occurred: ${e.response?.statusMessage}', 'code': e.response?.statusCode},
+        statusCode: e.response?.statusCode,
+      );
+    } else {
+      // Handling errors without response (network errors, timeout, etc.)
+      return Response(
+        requestOptions: e.requestOptions,
+        data: {'message': 'Network error: ${e.message}'},
+        statusCode: 400,
+      );
+    }
   }
 }
