@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> checkLoggedIn() async {
-    if (await prefManager.isLoggedIn()) {
+    if (await prefManager.isLoggedIn() ?? false) {
       navigateToScreen(context, const DashboardApp());
     }
   }

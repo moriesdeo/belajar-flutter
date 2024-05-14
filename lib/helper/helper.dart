@@ -1,37 +1,42 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefManager {
   static const _tokenKey = 'token';
   static const _languageKey = 'language';
   static const _isLoggedInKey = 'isLoggedIn';
-  final storage = const FlutterSecureStorage();
 
   Future<void> saveToken(String token) async {
-    await storage.write(key: _tokenKey, value: token);
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    await storage.setString(_tokenKey, token);
   }
 
   Future<String?> getToken() async {
-    return await storage.read(key: _tokenKey);
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    return storage.getString(_tokenKey);
   }
 
   Future<void> deleteToken() async {
-    await storage.delete(key: _tokenKey);
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    await storage.remove(_tokenKey);
   }
 
   Future<void> saveLanguage(String language) async {
-    await storage.write(key: _languageKey, value: language);
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    await storage.setString(_languageKey, language);
   }
 
   Future<String?> getLanguage() async {
-    return await storage.read(key: _languageKey);
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    return storage.getString(_languageKey);
   }
 
   Future<void> setLoggedIn(bool isLoggedIn) async {
-    await storage.write(key: _isLoggedInKey, value: isLoggedIn.toString());
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    await storage.setBool(_isLoggedInKey, isLoggedIn);
   }
 
-  Future<bool> isLoggedIn() async {
-    String? isLoggedInString = await storage.read(key: _isLoggedInKey);
-    return isLoggedInString == 'true';
+  Future<bool?> isLoggedIn() async {
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    return storage.getBool(_isLoggedInKey);
   }
 }
