@@ -7,7 +7,7 @@ import 'package:belajar_flutter/presentation/screens.dart';
 import 'package:belajar_flutter/ui/dashboard.dart';
 import 'package:flutter/material.dart';
 
-import '../app_end.dart';
+import 'app_end.dart';
 
 void main() {
   setupLocator();
