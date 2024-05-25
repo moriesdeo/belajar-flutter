@@ -65,6 +65,4 @@ void navigateToScreen(BuildContext context, Widget screen) {
       builder: (context) => screen,
     ),
   );
-
-  print('Received back: $result');
 }

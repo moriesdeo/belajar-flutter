@@ -48,7 +48,7 @@ class _AlignPageState extends State<AlignPage> {
     return Column(
       children: [
         // Widget paling atas
-        Align(
+        const Align(
           alignment: Alignment.topCenter,
           child: Column(
             children: [
@@ -115,7 +115,9 @@ class _LoginPageState extends State<LoginPage> {
         prefManager.setLoggedIn(true);
         navigateToScreen(context, const DashboardApp());
       } else {
-        _showAlertDialog(statusCode: success.statusCode, statusMessage: success.statusMessage);
+        _showAlertDialog(
+            statusCode: success.statusCode,
+            statusMessage: success.statusMessage);
       }
     } catch (error) {
     } finally {
@@ -125,7 +127,8 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _showAlertDialog({required int statusCode, required String statusMessage}) {
+  void _showAlertDialog(
+      {required int statusCode, required String statusMessage}) {
     AlertDialogPositoveUtil.showPositiveAlertDialog(
       context: context,
       title: statusCode.toString(),
@@ -212,7 +215,11 @@ class CustomBackButtonHandler extends StatelessWidget {
   final bool canPop;
   final Future<bool> Function(bool didPop) onPopInvoked;
 
-  const CustomBackButtonHandler({super.key, required this.child, required this.canPop, required this.onPopInvoked});
+  const CustomBackButtonHandler(
+      {super.key,
+      required this.child,
+      required this.canPop,
+      required this.onPopInvoked});
 
   @override
   Widget build(BuildContext context) {
