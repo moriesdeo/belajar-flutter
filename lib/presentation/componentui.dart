@@ -128,3 +128,82 @@ class LoadingProgress extends StatelessWidget {
         : Container();
   }
 }
+
+class CustomLinearProgressBar extends StatelessWidget {
+  const CustomLinearProgressBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 200,
+      height: 20,
+      child: Container(
+        width: double.infinity,
+        height: 20,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(50.0)),
+        ),
+        child: Row(
+          children: [
+            AnimatedContainer(
+              curve: Curves.linear,
+              duration: const Duration(seconds: 1),
+              width: 100,
+              height: 20,
+              color: Colors.blue,
+              child: const ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(50.0)),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class DeterminateCircularProgressIndicator extends StatefulWidget {
+  const DeterminateCircularProgressIndicator({super.key});
+
+  @override
+  _DeterminateCircularProgressIndicatorState createState() => _DeterminateCircularProgressIndicatorState();
+}
+
+class _DeterminateCircularProgressIndicatorState extends State<DeterminateCircularProgressIndicator> {
+  double progress = 0.0;
+
+  void updateProgress() {
+    setState(() {
+      progress += 0.1;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(50),
+            border: Border.all(color: Colors.blue, width: 5),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircularProgressIndicator(
+              value: progress,
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: updateProgress,
+          child: Text('Increase Progress'),
+        ),
+      ],
+    );
+  }
+}

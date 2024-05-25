@@ -28,9 +28,53 @@ class FirstApp extends StatelessWidget {
         appBar: AppBar(
           title: Text(Localization.getString('app_title', locale: '')),
         ),
-        body: const LoginPage(),
+        body: const MyCustomPage(),
       ),
       debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class AlignPage extends StatefulWidget {
+  const AlignPage({super.key});
+
+  @override
+  State<AlignPage> createState() => _AlignPageState();
+}
+
+class _AlignPageState extends State<AlignPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Widget paling atas
+        Align(
+          alignment: Alignment.topCenter,
+          child: Column(
+            children: [
+              Text('wkkwkwkwwkkwwkwkwk'),
+              Text('wkkwkwkwwkkwwkwkwk'),
+              Text('wkkwkwkwwkkwwkwkwk'),
+              Text('wkkwkwkwwkkwwkwkwk'),
+              Text('wkkwkwkwwkkwwkwkwk'),
+              Text('wkkwkwkwwkkwwkwkwk'),
+              Text('wkkwkwkwwkkwwkwkwk'),
+              Text('wkkwkwkwwkkwwkwkwk'),
+              Text('wkkwkwkwwkkwwkwkwk'),
+              Text('wkkwkwkwwkkwwkwkwk'),
+              Text('wkkwkwkwwkkwwkwkwk'),
+              Text('wkkwkwkwwkkwwkwkwk'),
+            ],
+          ),
+        ),
+        // Expanded untuk mengisi ruang di antara widget atas dan bawah
+        Expanded(child: Container()),
+        // Widget paling bawah
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Text('wkkwkwkwwkkwwkwkwk'),
+        ),
+      ],
     );
   }
 }

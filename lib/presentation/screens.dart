@@ -92,7 +92,7 @@ class MyCustomPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: true,
+      canPop: false,
       onPopInvoked: (bool didPop) async {
         if (!didPop) {
           // Perform your logic here if the pop action was not successful
@@ -106,8 +106,9 @@ class MyCustomPage extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(title: const Text("Custom Back Navigation")),
-        body: const Center(
-          child: Text("Press Back to trigger custom logic."),
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: TestPage(),
         ),
       ),
     );
@@ -132,5 +133,48 @@ class MyCustomPage extends StatelessWidget {
           ),
         ) ??
         false; // Returning false if showDialog returns null
+  }
+}
+
+class TestPage extends StatefulWidget {
+  const TestPage({super.key});
+
+  @override
+  State<TestPage> createState() => _TestPageState();
+}
+
+class _TestPageState extends State<TestPage> {
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              if (index < 20) {
+                return Card(
+                  child: Center(
+                    child: Text("Item $index"),
+                  ),
+                );
+              } else {
+                return null;
+              }
+            },
+            childCount: 20,
+          ),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            List.generate(30, (index) => Text('data')),
+          ),
+        ),
+      ],
+    );
   }
 }
