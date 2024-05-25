@@ -59,7 +59,7 @@ class AlertDialogPositoveUtil {
 }
 
 void navigateToScreen(BuildContext context, Widget screen) {
-  final result = Navigator.push(
+  Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => screen,
